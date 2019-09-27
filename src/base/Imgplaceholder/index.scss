@@ -1,0 +1,12 @@
+.img-placeholder{
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: #999;
+}
+.real-img{
+    width: 100%;
+    height: 100%;
+    transition: all 2s ease; 
+    transform: translate3d(0,0,0)
+}

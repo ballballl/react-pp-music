@@ -1,0 +1,33 @@
+.recommend-con{
+    position: fixed;
+    top:78px;
+    bottom: 0;
+    width: 100%;
+    background: $theme-bg-color;
+    .recommend-list{
+        display: flex;
+        justify-content: space-around;
+        width: 335px;
+        min-height: 100% ;
+        overflow: hidden;
+        transform: translate3d(20px,0,0);
+        .list-cell{
+            display: inline-block;
+            margin-right: 9px;
+            &:last-child{
+                margin: 0;
+            }
+        }
+    }
+    .title-con{
+        margin: 25px 20px 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        p.title-text{
+            font-size: 17px;
+            color: $title-color;
+        }
+    }
+}
+

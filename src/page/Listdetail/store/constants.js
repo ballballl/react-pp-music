@@ -1,0 +1,1 @@
+export const LIST_DETAIL_UPDATE = 'LIST_DETAIL_UPDATE'

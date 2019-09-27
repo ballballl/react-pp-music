@@ -1,0 +1,25 @@
+.slider-con{
+    position: relative;
+    width: 375px;
+    height:125px;
+    .swiper-con{
+        position: relative;
+        .banner-cell{
+            @include img-wrap(335px,123px);
+            margin: 0 auto;
+        }
+    }
+    .swiper-pagination{
+        bottom: 0;
+        .swiper-pagination-bullet{
+            width: 7px;
+            height: 7px;
+            border: 1px solid $white; 
+        }
+        .swiper-pagination-bullet-active{
+            background: $theme-bg-color;
+        }   
+    }
+     
+}
+    

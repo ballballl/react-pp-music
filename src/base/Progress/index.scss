@@ -1,0 +1,36 @@
+.progress-con{
+    position: relative;
+    width: 250px;
+    height: 2px;
+    background: #959595;
+    border-radius: 3px;
+    &.pressed{
+        height: 3px;
+        .progress-length{
+            .progress-dot{
+                width: 17px;
+                height: 17px;
+            }
+        }
+    }
+    .progress-length{
+        position: absolute;
+        top:0;
+        left: 0;
+        width: 0;
+        height: 100%;
+        border-radius: 3px;
+        background: #36de96;
+        .progress-dot{
+            position: absolute;
+            top:50%;
+            right:-7px;
+            background: #fff;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            transform: translate3d(0,-50%,0);
+            @include box-shadow;
+        }
+    }
+}

@@ -1,0 +1,49 @@
+
+.playing-ani{
+    &.pause div{
+        animation-play-state: paused;
+    }
+    div{
+        display: inline-block;
+        width: 2px;
+        height:8px;
+        margin:0 1px;
+        background: #36de96;
+        animation: jump .6s infinite linear;
+        transform-origin: 50% 100%;
+        &:nth-of-type(2){
+            transform: scale3d(1,0.7,1);
+            animation-delay: 0.1s;
+        }
+        &:nth-of-type(3){
+            transform: scale3d(1,1.1,1);
+            animation-delay: 0.17s;
+        }
+        &:nth-of-type(4){
+            transform: scale3d(1,1.3,1);
+            animation-delay: 0.29s;
+        }
+        &:nth-of-type(5){
+            transform: scale3d(1,1,1);
+            animation-delay: 0.4s;
+        }
+    }
+}
+
+@keyframes jump{
+    0%{
+        transform: scale3d(1,1,1);
+    }
+    20%{
+        transform: scale3d(1,1.5,1);
+    }
+    50%{
+        transform: scale3d(1,1,1);
+    }
+    80%{
+        transform: scale3d(1,0.6,1);
+    }
+    100%{
+        transform: scale3d(1,1,1);
+    }
+}

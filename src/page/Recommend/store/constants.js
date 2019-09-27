@@ -1,0 +1,1 @@
+export const RECOMMEND_UPDATE = 'RECOMMEND_UPDATE'

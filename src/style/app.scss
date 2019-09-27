@@ -1,0 +1,10 @@
+.swiper-slide-active.swiper-slide-duplicate {
+    .img-placeholder{
+        display: none;
+    }
+    .real-img{
+        opacity: 1 !important;
+        transition: all 0s ease !important;
+    }
+}
+
