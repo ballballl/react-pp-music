@@ -24,6 +24,9 @@ const reducer =  (state=defaultState,action)=>{
         }
         case DELETE_SONG:{
             newState.playList.splice(value,1)
+            if(value==newState.currentIndex){
+                newState.currentSong = newState.playList[value]
+            }
             return newState
         }
         default: return newState

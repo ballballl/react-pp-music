@@ -14,6 +14,7 @@ import './index.scss'
  const modeText = ['顺序播放','单曲循环','随机播放']
  const Player = forwardRef((props,ref)=>{
     const{playList,currentIndex,playMode,currentSong,listId} = props
+    const currentSongId = currentSong ? currentSong.id : 0  
     const {updatePlayerDispatch, emptyListDispatch, deleteSongDispatch} = props
     const [playing, setPlaying] = useState(false)
     const [fold,setFold] = useState(true)
@@ -27,14 +28,20 @@ import './index.scss'
     const modalRef = useRef()
     useEffect(()=>{
         if(currentIndex==-1 || !playList[currentIndex] || playList.length==0 || currentSong &&(playList[currentIndex].id==currentSong.id)){
-            setFold(true)
-            setPlaying(false)
             return
         }
         setCurrentTime(0)
         let song = playList[currentIndex]
         updatePlayerDispatch(song,'currentSong')
-        audioRef.current.src = `https://music.163.com/song/media/outer/url?id=${song.id}.mp3`;
+    },[currentIndex,listId])
+
+
+    useEffect(()=>{
+        console.log(currentSongId)
+
+        if(!currentSongId) return
+        // if(currentSong==null || playList[currentIndex].id==currentSong.id)return
+        audioRef.current.src = `https://music.163.com/song/media/outer/url?id=${currentSongId}.mp3`;
         coverRef.current.onload = ()=>{
            setPlaying(true)
            audioRef.current.play()
@@ -42,23 +49,7 @@ import './index.scss'
         audioRef.current.oncanplay=()=>{
             setCurrentDuration(audioRef.current.duration)
         }
-
-    },[currentIndex,listId])
-
-    // useEffect(()=>{
-    //     let song = playList[currentIndex]
-    //     if(currentSong && song.id != currentSong.id){
-    //         updatePlayerDispatch(song,'currentSong')
-    //         audioRef.current.src = `https://music.163.com/song/media/outer/url?id=${song.id}.mp3`;
-    //         coverRef.current.onload = ()=>{
-    //         setPlaying(true)
-    //         audioRef.current.play()
-    //         }
-    //         audioRef.current.oncanplay=()=>{
-    //             setCurrentDuration(audioRef.current.duration)
-    //         }
-    //     }
-    // },[playList.length])
+    },[currentSongId])
 
     
 
@@ -209,7 +200,7 @@ import './index.scss'
                                                 </div>
     
                                                 {currentSong && song.id==currentSong.id && <PlayingAni pause={!playing}/>}
-                                                <div className='del-btn' onClick={()=>{deleteSongFunc(idx)}} >
+                                                <div className='del-btn' onClick={(e)=>{e.stopPropagation();deleteSongFunc(idx)}} >
                                                     <Icon type='del' size={15} />
                                                 </div>
                                             </div>
@@ -237,7 +228,6 @@ import './index.scss'
         setTimeout(() => {
             toastRef.current.show()
         })
-
     }
     const handleTimeUpdate=()=>{
         if(fold) return;
