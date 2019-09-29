@@ -1,4 +1,4 @@
-import {PLAYER_UPDATE} from './constants'
+import {PLAYER_UPDATE,EMPTY_LIST,DELETE_SONG} from './constants'
 const defaultState={
     listId: null,
     playList:[],
@@ -13,6 +13,17 @@ const reducer =  (state=defaultState,action)=>{
     switch(type){
         case PLAYER_UPDATE:{
             newState[key] = value
+            return newState
+        }
+        case EMPTY_LIST:{
+            newState.listId = ''
+            newState.playList =[]
+            newState.currentSong=null
+            newState.currentIndex=-1
+            return newState
+        }
+        case DELETE_SONG:{
+            newState.playList.splice(value,1)
             return newState
         }
         default: return newState

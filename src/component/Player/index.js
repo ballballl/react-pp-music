@@ -1,8 +1,9 @@
 import React,{useEffect, useState, useRef, forwardRef}from 'react';
-import {updatePlayerAction} from './store/actionCreator'
+import {updatePlayerAction, emptyListAction, deleteSongAction} from './store/actionCreator'
 import Icon from '@base/Icon/index'
 import Progress from '@base/Progress/index'
 import Toast from '@base/Toast/index'
+import Modal from '@base/Modal/index'
 import Scroller from '@base/Scroller/index'
 import  PlayingAni from '@base/PlayingAni/index'
 import { connect } from 'react-redux';
@@ -13,7 +14,7 @@ import './index.scss'
  const modeText = ['顺序播放','单曲循环','随机播放']
  const Player = forwardRef((props,ref)=>{
     const{playList,currentIndex,playMode,currentSong,listId} = props
-    const {updatePlayerDispatch,} = props
+    const {updatePlayerDispatch, emptyListDispatch, deleteSongDispatch} = props
     const [playing, setPlaying] = useState(false)
     const [fold,setFold] = useState(true)
     const [listShow,setListShow] = useState(false)
@@ -23,24 +24,43 @@ import './index.scss'
     const coverRef = useRef()
     const progressRef = useRef()
     const toastRef = useRef()
+    const modalRef = useRef()
     useEffect(()=>{
-        if(currentIndex==-1 || !playList[currentIndex] || playList.length==0 || currentSong &&(playList[currentIndex].id==currentSong.id))return
+        if(currentIndex==-1 || !playList[currentIndex] || playList.length==0 || currentSong &&(playList[currentIndex].id==currentSong.id)){
+            setFold(true)
+            setPlaying(false)
+            return
+        }
         setCurrentTime(0)
         let song = playList[currentIndex]
         updatePlayerDispatch(song,'currentSong')
-        console.log(song)
-
         audioRef.current.src = `https://music.163.com/song/media/outer/url?id=${song.id}.mp3`;
         coverRef.current.onload = ()=>{
            setPlaying(true)
            audioRef.current.play()
-        //    setFold(true)
         }
         audioRef.current.oncanplay=()=>{
             setCurrentDuration(audioRef.current.duration)
         }
 
     },[currentIndex,listId])
+
+    // useEffect(()=>{
+    //     let song = playList[currentIndex]
+    //     if(currentSong && song.id != currentSong.id){
+    //         updatePlayerDispatch(song,'currentSong')
+    //         audioRef.current.src = `https://music.163.com/song/media/outer/url?id=${song.id}.mp3`;
+    //         coverRef.current.onload = ()=>{
+    //         setPlaying(true)
+    //         audioRef.current.play()
+    //         }
+    //         audioRef.current.oncanplay=()=>{
+    //             setCurrentDuration(audioRef.current.duration)
+    //         }
+    //     }
+    // },[playList.length])
+
+    
 
     useEffect(()=>{
         if(playList.length==0)return
@@ -70,18 +90,18 @@ import './index.scss'
                 timeout={300}
             >
                 <div className={'fold-player'}>
-                    <div className={`rotate-cover ${playing ? '': 'pause'}`} onClick={()=>{setFold(false)}}>
+                    <div className={`rotate-cover ${currentSong && playing ? '': 'pause'}`} onClick={()=>{currentSong && setFold(false)}}>
                         <img ref={coverRef} src={currentSong ? currentSong.al.picUrl : 'http://p2.music.126.net/0KCMOKHHbimwfdVvPPBpTA==/109951164034526943.jpg'} />
                     </div>
                     <div className={'song-info'}>
                         {currentSong && <p>{currentSong.name+' '}-{' '+currentSong.ar.map((item)=>{return item.name}).join('/')}</p>}
                     </div>
                     <div className={'ctrl-btn'} >
-                        <div onClick={()=>{setPlaying(!playing)}}>
-                            {playing?  <Icon type={'pause'} size={'34'} isCenter={true} /> :<Icon type={'play'} size={'34'} isCenter={true}/> }
+                        <div onClick={()=>{currentSong && setPlaying(!playing)}}>
+                            {currentSong && playing?  <Icon type={'pause'} size={'34'} isCenter={true} /> :<Icon type={'play'} size={'34'} isCenter={true}/> }
                         </div>
                     </div>
-                    <div className={'list-btn'}  onClick={()=>{setListShow(true)}} > 
+                    <div className={'list-btn'}  onClick={()=>{currentSong && setListShow(true)}} > 
                         <Icon type={'list'} size={'27'} isCenter={true} />
                     </div>
                 </div>
@@ -111,7 +131,7 @@ import './index.scss'
                         </div>
                     </div>
                     <div className='middle'>
-                        <div className={`cd-cover ${playing ? '': 'pause'}`} onClick={()=>{setFold(false)}}>
+                        <div className={`cd-cover ${playing ? '': 'pause'}`} >
                             <img src={currentSong ? currentSong.al.picUrl : 'http://p2.music.126.net/0KCMOKHHbimwfdVvPPBpTA==/109951164034526943.jpg'} />
                         </div>
                     </div>
@@ -140,7 +160,7 @@ import './index.scss'
                             <div onClick={handleNext} >
                                 <Icon type='next2' size={30}/>
                             </div>
-                            <div onClick={()=>{setListShow(true)}}>
+                            <div onClick={()=>{currentSong && setListShow(true)}}>
                                 <Icon type='list' size={25}/>
                             </div>
                         </div>
@@ -169,7 +189,7 @@ import './index.scss'
                                 {playMode==2 && <Icon type='shuffle' size={16}/>}
                             </div>
                             <p className='mode-text'>{modeText[playMode]+(playMode!=1?'（'+playList.length+'首）':'')}</p>
-                            <div className='empty-btn'>
+                            <div className='empty-btn' onClick={()=>{modalRef.current.showConfirm()}}>
                                 <Icon type='trash' size={23} />
                             </div>
                         </div>
@@ -189,7 +209,7 @@ import './index.scss'
                                                 </div>
     
                                                 {currentSong && song.id==currentSong.id && <PlayingAni pause={!playing}/>}
-                                                <div className='del-btn'>
+                                                <div className='del-btn' onClick={()=>{deleteSongFunc(idx)}} >
                                                     <Icon type='del' size={15} />
                                                 </div>
                                             </div>
@@ -273,12 +293,23 @@ import './index.scss'
         audioRef.current.play();
     }
 
+    const deleteSongFunc = (idx)=>{
+        deleteSongDispatch(idx)
+    }
+
+    const emptyList = ()=>{
+        emptyListDispatch()
+        setListShow(false)
+    }
+
+
     return (
         <>
             {foldPlayer()}
             {fullPlayer()}
             {playListPanel()}
             <Toast ref={toastRef} toastText={'已切换到'+modeText[playMode]+'模式'} />
+            <Modal ref={modalRef} title={'清空当前播放队列'} confirmFunc={emptyList}  />
             <audio 
                 ref={audioRef} 
                 onTimeUpdate={handleTimeUpdate}
@@ -300,7 +331,14 @@ import './index.scss'
  const dispatchToProps = (dispatch)=>({
     updatePlayerDispatch(value,key){
         dispatch(updatePlayerAction(value,key))
+    },
+    emptyListDispatch(){
+        dispatch(emptyListAction())
+    },
+    deleteSongDispatch(idx){
+        dispatch(deleteSongAction(idx))
     }
+
  })
 
  export default connect(stateToProps,dispatchToProps)(Player)
