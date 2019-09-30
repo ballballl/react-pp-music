@@ -5,6 +5,7 @@ import Progress from '@base/Progress/index'
 import Toast from '@base/Toast/index'
 import Modal from '@base/Modal/index'
 import Scroller from '@base/Scroller/index'
+import RollingText from '@base/RollingText/index'
 import  PlayingAni from '@base/PlayingAni/index'
 import { connect } from 'react-redux';
 import { CSSTransition } from "react-transition-group";
@@ -85,7 +86,8 @@ import './index.scss'
                         <img ref={coverRef} src={currentSong ? currentSong.al.picUrl : 'http://p2.music.126.net/0KCMOKHHbimwfdVvPPBpTA==/109951164034526943.jpg'} />
                     </div>
                     <div className={'song-info'}>
-                        {currentSong && <p>{currentSong.name+' '}-{' '+currentSong.ar.map((item)=>{return item.name}).join('/')}</p>}
+                        <RollingText text={currentSong  ? (currentSong.name+' - '+currentSong.ar.map((item)=>{return item.name}).join('/')): 'pp音乐哈哈哈'} />
+                        {/* {currentSong && <p>{currentSong.name+' '}-{' '+currentSong.ar.map((item)=>{return item.name}).join('/')}</p>} */}
                     </div>
                     <div className={'ctrl-btn'} >
                         <div onClick={()=>{currentSong && setPlaying(!playing)}}>
@@ -117,8 +119,8 @@ import './index.scss'
                             <Icon type='down' size='25' color='#fff' />
                         </div>
                         <div className='title-con'>
-                            <p  className='song'>{currentSong? currentSong.name: ''}</p>
-                            <p  className='singer'>{'— '+(currentSong? currentSong.ar.map(item=>item.name).join(' / '): '')+' —'}</p>
+                            <div  className='song'><RollingText text={currentSong && !fold  ? currentSong.name: ''} size={18} /></div>
+                            <div  className='singer'><RollingText text={currentSong &&  !fold? currentSong.ar.map(item=>item.name).join(' / '): ''}/></div>
                         </div>
                     </div>
                     <div className='middle'>

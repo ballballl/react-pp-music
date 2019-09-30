@@ -103,12 +103,16 @@
         }
         .title-con{
             display: inline-block;
+            width: 100%;
             color: #fff;
             .song{
-                margin: 10px;
+                width: 65%;
+                margin: 10px auto;
                 font-size: 18px;
             }
             .singer{
+                width: 70%;
+                margin: 0 auto;
                 font-size: 14px;
             }
         }

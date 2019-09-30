@@ -20,7 +20,7 @@
         font-size: 17px;
         text-align: center;
         overflow: hidden;
-        p{
+        &>div{
             display: inline-block; 
             transition: opacity 0.5s ease;
             &.func-text{
@@ -29,6 +29,7 @@
             }
             &.title-text{
                 position: relative;
+                width: 100%;
                 white-space: nowrap;
                 opacity: 0;
             }

@@ -1,0 +1,35 @@
+.rolling-con{
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    text-align: inherit;
+    overflow: hidden;
+    div{
+        display: inline-block;
+        position: relative;
+        white-space: nowrap;
+    }
+}
+
+@keyframes rollingText{
+    0% {
+        transform: translate3d(0,0,0);
+        left: 0;
+    }
+    40% {
+        transform: translate3d(-100%,0,0);
+        left:100%;
+    }
+    50% {
+        transform: translate3d(-100%,0,0);
+        left:100%;
+    }
+    90% {
+        transform: translate3d(0,0,0);
+        left: 0;
+    }
+    100% {
+        transform: translate3d(0,0,0);
+        left: 0;
+    }
+}
